@@ -1,13 +1,14 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tracker_app/features/home_screen/bloc/notification_bloc.dart';
 import 'package:tracker_app/features/home_screen/bloc/weather_bloc.dart';
 import 'package:tracker_app/features/home_screen/view/widget/weather_text.dart';
 import 'package:weather/weather.dart';
 
-class HomeScreen extends ConsumerStatefulWidget {
+class HomeScreen extends StatefulHookConsumerWidget {
   const HomeScreen({super.key});
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _HomeScreenState();
@@ -15,7 +16,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen>
     with WidgetsBindingObserver {
-  sendActiveNotification() async {
+  sendActiveNotification() {
     ref.read(notificationBloc).getFirebaseData().then((value) {
       ref.read(notificationBloc).sendNotification(isOffline: false);
     });
@@ -25,7 +26,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    sendActiveNotification();
   }
 
   @override
@@ -45,7 +45,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    useMemoized(() {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        sendActiveNotification();
+      });
+    });
     final weatherStream = ref.read(weatherBloc).getLocationStream;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tracker App'),
