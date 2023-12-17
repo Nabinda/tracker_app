@@ -35,10 +35,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         text:
                             'Current Temperature: ${weatherData.tempFeelsLike}'),
                     WeatherText(
-                        text: 'Minimum Temperature: ${weatherData.tempMin}'),
-                    WeatherText(
-                        text: 'Maximum Temperature: ${weatherData.tempMax}'),
-                    WeatherText(
                         text: 'Weather: ${weatherData.weatherDescription}'),
                     WeatherText(text: 'Wind Speed: ${weatherData.windSpeed}'),
                   ],
