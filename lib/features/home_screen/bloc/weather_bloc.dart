@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map_math/flutter_geo_math.dart';
@@ -30,8 +31,9 @@ class WeatherBloc extends ChangeNotifier {
   LocationData? previousLocation;
 
   /// Change this as per requirement to fetch the weather report as distance Travelled
-  int distanceInMeters = 2000;
+  int distanceInMeters = 20;
 
+  ///Fetch the weather location using Open Weather
   void getWeatherByLocation() {
     final userLocationStream = ref.read(locationBloc).getLocationStream;
     userLocationStream.listen((event) async {

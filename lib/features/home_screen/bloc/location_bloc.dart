@@ -3,11 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:location/location.dart';
+import 'package:tracker_app/features/home_screen/bloc/firebase_bloc.dart';
 
-final locationBloc = ChangeNotifierProvider((ref) => LocationBloc());
+final locationBloc = ChangeNotifierProvider((ref) => LocationBloc(ref: ref));
 
 class LocationBloc extends ChangeNotifier {
-  LocationBloc() {
+  final Ref ref;
+  LocationBloc({required this.ref}) {
     getUserLocation();
   }
   Location location = Location();
@@ -49,9 +51,11 @@ class LocationBloc extends ChangeNotifier {
     if (await checkIfAllPermissionGranted()) {
       //Stream the location
       location.onLocationChanged.handleError((onError) {
-        //Handle Errors Here
+        _controller.sink.addError(onError);
       }).listen((locationData) {
         _controller.sink.add(locationData);
+        ref.read(firebaseBloc).updateLocationToDataBase(
+            lat: locationData.latitude, long: locationData.longitude);
       });
       //Run the location in background mode if not enabled
       if (!(await location.isBackgroundModeEnabled())) {
