@@ -15,19 +15,6 @@ class FirebaseBloc extends ChangeNotifier {
 
   bool isLoading = false;
 
-  String token = '';
-
-  updateToken(String t) {
-    token = t;
-    log('Token: $token');
-    notifyListeners();
-  }
-
-  updateLoading(bool val) {
-    isLoading = val;
-    notifyListeners();
-  }
-
   ///Update the location of user to firebase
   Future<void> updateLocationToDataBase(
       {required double? lat, required double? long}) async {
@@ -37,10 +24,8 @@ class FirebaseBloc extends ChangeNotifier {
       firestore
           .collection(FirebaseConstants.locationCollection)
           .doc(FirebaseConstants.locationDocument)
-          .set(FirebaseLatLongModel(
-                  lastLat: lat, lastLong: long, tracerToken: token)
-              .toJson())
-          .then((value) {
+          .set({'last_lat': lat, 'last_long': long},
+              SetOptions(merge: true)).then((value) {
         isLoading = false;
       }).onError((error, stackTrace) {
         isLoading = false;

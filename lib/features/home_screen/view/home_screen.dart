@@ -26,6 +26,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    sendActiveNotification();
   }
 
   @override
@@ -45,13 +46,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    useMemoized(() {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        sendActiveNotification();
-      });
-    });
     final weatherStream = ref.read(weatherBloc).getLocationStream;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tracker App'),

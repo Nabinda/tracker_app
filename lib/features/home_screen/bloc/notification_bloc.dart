@@ -20,7 +20,6 @@ class NotificationBloc extends ChangeNotifier {
 
   ///Fetch the tracer device token key to send the notification
   Future<void> getFirebaseData() async {
-    ref.read(firebaseBloc).updateLoading(true);
     firestore
         .collection(FirebaseConstants.locationCollection)
         .doc(FirebaseConstants.locationDocument)
@@ -33,12 +32,10 @@ class NotificationBloc extends ChangeNotifier {
       if (data?.tracerToken != value.data()?.tracerToken) {
         data = value.data();
         //Update previous token
-        ref.read(firebaseBloc).updateToken(data?.tracerToken ?? '');
       }
     }).onError((error, stackTrace) {
       debugPrint('Error: $error, Stack Trace : $stackTrace');
     });
-    ref.read(firebaseBloc).updateLoading(false);
   }
 
   ///Send notification using google cloud console
