@@ -1,10 +1,7 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tracker_app/constants/firestore_constants.dart';
-import 'package:tracker_app/features/home_screen/bloc/firebase_bloc.dart';
 import 'package:tracker_app/features/home_screen/data/model/firebase_lat_long_model.dart';
 import 'package:tracker_app/features/home_screen/data/repo/notification_repo.dart';
 
@@ -20,18 +17,18 @@ class NotificationBloc extends ChangeNotifier {
 
   ///Fetch the tracer device token key to send the notification
   Future<void> getFirebaseData() async {
-    firestore
+    await firestore
         .collection(FirebaseConstants.locationCollection)
         .doc(FirebaseConstants.locationDocument)
         .withConverter(
             fromFirestore: (snapshot, _) =>
                 FirebaseLatLongModel.fromJson(snapshot.data()!),
             toFirestore: (data, _) => data.toJson())
-        .snapshots()
-        .listen((value) {
+        .get()
+        .then((value) {
       if (data?.tracerToken != value.data()?.tracerToken) {
-        data = value.data();
         //Update previous token
+        data = value.data();
       }
     }).onError((error, stackTrace) {
       debugPrint('Error: $error, Stack Trace : $stackTrace');
