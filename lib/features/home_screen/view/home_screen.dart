@@ -26,14 +26,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     sendActiveNotification();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    //When App is terminated
-    if (state == AppLifecycleState.detached) {
-      ref.read(notificationBloc).sendNotification(isOffline: true);
-    }
-  }
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   super.didChangeAppLifecycleState(state);
+  //   //When App is terminated
+  //   if (state == AppLifecycleState.detached) {
+  //     ref.read(notificationBloc).sendNotification(isOffline: true);
+  //   }
+  // }
 
   @override
   void dispose() {

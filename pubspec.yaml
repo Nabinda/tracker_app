@@ -52,7 +52,7 @@ dependencies:
   #For Creating Model
   freezed: ^2.4.6
   json_annotation: ^4.8.1
-
+  workmanager: ^0.5.2
 
 dev_dependencies:
   flutter_test:
