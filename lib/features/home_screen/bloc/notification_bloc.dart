@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -27,7 +29,6 @@ class NotificationBloc extends ChangeNotifier {
         .get()
         .then((value) {
       if (data?.tracerToken != value.data()?.tracerToken) {
-        //Update previous token
         data = value.data();
       }
     }).onError((error, stackTrace) {
@@ -37,6 +38,7 @@ class NotificationBloc extends ChangeNotifier {
 
   ///Send notification using google cloud console
   Future<void> sendNotification({required bool isOffline}) async {
+    log('Token: ${data?.tracerToken}');
     if (data?.tracerToken != null && (data?.tracerToken?.isNotEmpty ?? false)) {
       ref.read(notificationRepo).sendNotification(
           token: data?.tracerToken ?? '', isOffline: isOffline);

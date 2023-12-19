@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tracker_app/config/api_config.dart';
@@ -41,14 +43,13 @@ class BaseClient {
     Object? data,
   }) async {
     try {
-      final res = await _dio.post(
-        path,
-        data: data,
-      );
+      final res = await _dio.post(path, data: data);
+      log('Res: ${res.data}');
       return res.data;
     } on DioException catch (_) {
       rethrow;
     } catch (e) {
+      log('Error: $e');
       rethrow;
     }
   }
