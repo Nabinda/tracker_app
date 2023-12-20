@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tracker_app/core/shared_pref_helper.dart';
@@ -11,6 +12,9 @@ import 'package:workmanager/workmanager.dart';
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
+    if (kDebugMode) {
+      print('Input Type: $inputData');
+    }
     final Dio dio = Dio();
     try {
       final res = await dio.request('https://fcm.googleapis.com/fcm/send',
