@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tracker_app/constants/firestore_constants.dart';
+import 'package:tracker_app/constants/shared_pref_constants.dart';
+import 'package:tracker_app/core/shared_pref_helper.dart';
 import 'package:tracker_app/features/home_screen/data/model/firebase_lat_long_model.dart';
 import 'package:tracker_app/features/home_screen/data/repo/notification_repo.dart';
 
@@ -27,8 +29,11 @@ class NotificationBloc extends ChangeNotifier {
                 FirebaseLatLongModel.fromJson(snapshot.data()!),
             toFirestore: (data, _) => data.toJson())
         .get()
-        .then((value) {
+        .then((value) async {
       if (data?.tracerToken != value.data()?.tracerToken) {
+        //Store token to send notification when app is terminated
+        await SharedPrefHelper.write(
+            SharedPrefConstants.token, value.data()?.tracerToken ?? '');
         data = value.data();
       }
     }).onError((error, stackTrace) {
@@ -38,7 +43,6 @@ class NotificationBloc extends ChangeNotifier {
 
   ///Send notification using google cloud console
   Future<void> sendNotification({required bool isOffline}) async {
-    log('Token: ${data?.tracerToken}');
     if (data?.tracerToken != null && (data?.tracerToken?.isNotEmpty ?? false)) {
       ref.read(notificationRepo).sendNotification(
           token: data?.tracerToken ?? '', isOffline: isOffline);

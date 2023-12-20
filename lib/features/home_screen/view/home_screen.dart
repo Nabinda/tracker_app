@@ -4,6 +4,7 @@ import 'package:tracker_app/features/home_screen/bloc/notification_bloc.dart';
 import 'package:tracker_app/features/home_screen/bloc/weather_bloc.dart';
 import 'package:tracker_app/features/home_screen/view/widget/weather_text.dart';
 import 'package:weather/weather.dart';
+import 'package:workmanager/workmanager.dart';
 
 class HomeScreen extends StatefulHookConsumerWidget {
   const HomeScreen({super.key});
@@ -26,14 +27,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     sendActiveNotification();
   }
 
-  // @override
-  // void didChangeAppLifecycleState(AppLifecycleState state) {
-  //   super.didChangeAppLifecycleState(state);
-  //   //When App is terminated
-  //   if (state == AppLifecycleState.detached) {
-  //     ref.read(notificationBloc).sendNotification(isOffline: true);
-  //   }
-  // }
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    //When App is terminated
+    if (state == AppLifecycleState.detached) {
+      final data = ref.read(notificationBloc).data;
+      Workmanager().registerOneOffTask('notification', 'offline',
+          inputData: {'token': '${data?.tracerToken}'});
+    }
+  }
 
   @override
   void dispose() {

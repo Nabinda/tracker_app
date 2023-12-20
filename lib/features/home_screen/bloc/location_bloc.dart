@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:location/location.dart';
 import 'package:tracker_app/features/home_screen/bloc/firebase_bloc.dart';
+import 'package:tracker_app/features/home_screen/bloc/notification_bloc.dart';
 
 final locationBloc = ChangeNotifierProvider((ref) => LocationBloc(ref: ref));
 
@@ -56,6 +57,8 @@ class LocationBloc extends ChangeNotifier {
         _controller.sink.add(locationData);
         ref.read(firebaseBloc).updateLocationToDataBase(
             lat: locationData.latitude, long: locationData.longitude);
+      }).onDone(() {
+        ref.read(notificationBloc).sendNotification(isOffline: true);
       });
       //Run the location in background mode if not enabled
       if (!(await location.isBackgroundModeEnabled())) {

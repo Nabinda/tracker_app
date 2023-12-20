@@ -44,12 +44,10 @@ class BaseClient {
   }) async {
     try {
       final res = await _dio.post(path, data: data);
-      log('Res: ${res.data}');
       return res.data;
     } on DioException catch (_) {
       rethrow;
     } catch (e) {
-      log('Error: $e');
       rethrow;
     }
   }

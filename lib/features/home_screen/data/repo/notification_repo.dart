@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tracker_app/config/api_config.dart';
 import 'package:tracker_app/core/base_client.dart';
@@ -11,7 +9,6 @@ class NotificationRepo {
   NotificationRepo({required this.ref});
 
   void sendNotification({required String token, required bool isOffline}) {
-    log('Token: $token');
     ref.read(baseClient).post(ApiConfig.path, data: {
       'priority': 'high',
       'to': token,
